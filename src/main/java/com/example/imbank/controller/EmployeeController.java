@@ -3,11 +3,13 @@ package com.example.imbank.controller;
 
 import com.example.imbank.dto.EmployeeRequestDto;
 import com.example.imbank.dto.EmployeeResponseDto;
+import com.example.imbank.dto.PageResponseDto;
 import com.example.imbank.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -43,6 +45,37 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     public void deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
+    }
+
+    @GetMapping("/salary-range")
+    public List<EmployeeResponseDto> getEmployeesBySalaryRange(
+            @RequestParam BigDecimal min,
+            @RequestParam BigDecimal max) {
+        return employeeService.getEmployeesBySalaryRange(min, max);
+    }
+
+    @GetMapping("/by-department-name")
+    public List<EmployeeResponseDto> getEmployeesByDepartmentName(@RequestParam String name) {
+        return employeeService.getEmployeesByDepartmentName(name);
+    }
+
+    @GetMapping("/above-average-salary")
+    public List<EmployeeResponseDto> getAboveAverageSalaryEmployees() {
+        return employeeService.getAboveAverageSalaryEmployees();
+    }
+
+    @GetMapping("/search")
+    public List<EmployeeResponseDto> searchEmployeesByName(@RequestParam String keyword) {
+        return employeeService.searchEmployeesByName(keyword);
+    }
+
+    @GetMapping("/paginated")
+    public PageResponseDto<EmployeeResponseDto> getEmployeesPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir) {
+        return employeeService.getEmployeesPaginated(page, size, sortBy, sortDir);
     }
 
 }

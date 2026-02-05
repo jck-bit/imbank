@@ -1,0 +1,116 @@
+###  DEPARTMENT ENDPOINTS
+
+### Create Department
+POST http://localhost:8080/api/departments
+Content-Type: application/json
+
+{
+  "name": "IT",
+  "description": "Information Technology Department"
+}
+
+### Create another Department
+POST http://localhost:8080/api/departments
+Content-Type: application/json
+
+{
+  "name": "HR",
+  "description": "Human Resources Department"
+}
+
+### Get All Departments
+GET http://localhost:8080/api/departments
+
+### Get Department by ID
+GET http://localhost:8080/api/departments/1
+
+### Update Department
+PUT http://localhost:8080/api/departments/1
+Content-Type: application/json
+
+{
+  "name": "IT Updated",
+  "description": "Updated IT Department"
+}
+
+### Delete Department
+DELETE http://localhost:8080/api/departments/2
+
+
+--- EMPLOYEE ENDPOINTS --
+
+### Create Employee (make sure department with ID 1 exists first)
+POST http://localhost:8080/api/employees
+Content-Type: application/json
+
+{
+  "fullName": "John Doe",
+  "email": "john.doe@imbank.com",
+  "salary": 75000.00,
+  "departmentId": 1
+}
+
+### Create another Employee
+POST http://localhost:8080/api/employees
+Content-Type: application/json
+
+{
+  "fullName": "Jane Smith",
+  "email": "jane.smith@imbank.com",
+  "salary": 82000.00,
+  "departmentId": 1
+}
+
+### Get All Employees
+GET http://localhost:8080/api/employees
+
+### Get Employee by ID
+GET http://localhost:8080/api/employees/1
+
+### Get Employees by Department
+GET http://localhost:8080/api/employees/department/1
+
+### Update Employee
+PUT http://localhost:8080/api/employees/1
+Content-Type: application/json
+
+{
+  "fullName": "John Doe Updated",
+  "email": "john.updated@imbank.com",
+  "salary": 85000.00,
+  "departmentId": 1
+}
+
+### Delete Employee
+DELETE http://localhost:8080/api/employees/2
+
+
+### Get employees by salary range
+GET http://localhost:8080/api/employees/salary-range?min=50000&max=80000
+
+### Get employees by department name
+GET http://localhost:8080/api/employees/by-department-name?name=IT
+
+### Get employees with above average salary
+GET http://localhost:8080/api/employees/above-average-salary
+
+### Search employees by name
+GET http://localhost:8080/api/employees/search?keyword=john
+
+### Get employees paginated (default: page 0, size 10, sort by id asc)
+GET http://localhost:8080/api/employees/paginated
+
+### Get employees paginated - page 1, size 5
+GET http://localhost:8080/api/employees/paginated?page=1&size=5
+
+### Get employees sorted by salary descending
+GET http://localhost:8080/api/employees/paginated?sortBy=salary&sortDir=desc
+
+### Get employees sorted by fullName ascending, page 0, size 3
+GET http://localhost:8080/api/employees/paginated?page=0&size=3&sortBy=fullName&sortDir=asc
+
+createdAt / updatedAt — entity auditing
+Custom queries (JPQL) — repository level
+Pagination & Sorting — extends queries
+Application Properties & Profiles — e.g., default base salary, min salary, environment-specific configs
+AWS Database setup — last, swap H2 for real DB

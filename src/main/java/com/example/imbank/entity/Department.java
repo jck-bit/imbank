@@ -1,8 +1,16 @@
 package com.example.imbank.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import lombok.AllArgsConstructor;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
     @Entity
     @Table(name = "department")
@@ -10,8 +18,7 @@ import jakarta.persistence.Id;
     @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-
-    public class Department {
+    public class Department extends BaseEntity {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,5 +28,6 @@ import jakarta.persistence.Id;
         private String name;
 
         private String description;
+
 
     }
