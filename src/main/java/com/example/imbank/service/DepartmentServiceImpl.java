@@ -7,6 +7,8 @@ import com.example.imbank.entity.Department;
 import com.example.imbank.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import com.example.imbank.exception.ResourceNotFoundException;
+
 
 import java.util.List;
 
@@ -34,18 +36,16 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public DepartmentResponseDto getDepartmentById(Long id){
+    public DepartmentResponseDto getDepartmentById(Long id) {
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(
-                        "Department Not Found!"
-                ));
+                .orElseThrow(() -> new ResourceNotFoundException("Department", "id", id));
         return toResponseDto(department);
     }
 
     @Override
     public DepartmentResponseDto updateDepartment(Long id, DepartmentRequestDto departmentRequestDto){
         Department department = departmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Department Not Found!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Department Not Found!"));
 
         department.setName(departmentRequestDto.getName());
         department.setDescription(departmentRequestDto.getDescription());
@@ -57,7 +57,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public void deleteDepartment(Long id){
         if(!departmentRepository.existsById(id)){
-            throw new RuntimeException("Department Not Found!");
+            throw new ResourceNotFoundException("Department Not Found!");
         }
         departmentRepository.deleteById(id);
     }
