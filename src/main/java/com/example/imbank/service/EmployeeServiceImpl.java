@@ -15,11 +15,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import com.example.imbank.exception.ResourceNotFoundException;
 import com.example.imbank.exception.BadRequestException;
+import lombok.extern.slf4j.Slf4j;
 
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
@@ -30,34 +32,45 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponseDto createEmployee(EmployeeRequestDto dto) {
+        log.info("Creating employee with email: {}", dto.getEmail());
+
         Department department = departmentRepository.findById(dto.getDepartmentId())
-                .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+                .orElseThrow(() -> {
+                    log.error("Department not found with id: {}", dto.getDepartmentId());
+                    return new ResourceNotFoundException("Department", "id", dto.getDepartmentId());
+                });
+
+        BigDecimal salary = dto.getSalary() != null ? dto.getSalary() : employeeConfig.getDefaultSalary();
+        log.debug("Using salary: {} (default: {})", salary, dto.getSalary() == null);
+
+        if (salary.compareTo(employeeConfig.getMinSalary()) < 0) {
+            log.warn("Salary {} is below minimum {}", salary, employeeConfig.getMinSalary());
+            throw new BadRequestException("Salary cannot be less than " + employeeConfig.getMinSalary());
+        }
+        if (salary.compareTo(employeeConfig.getMaxSalary()) > 0) {
+            log.warn("Salary {} exceeds maximum {}", salary, employeeConfig.getMaxSalary());
+            throw new BadRequestException("Salary cannot exceed " + employeeConfig.getMaxSalary());
+        }
 
         Employee employee = new Employee();
         employee.setFullName(dto.getFullName());
         employee.setEmail(dto.getEmail());
-
-        // default salary if not provided, n
-        BigDecimal salary = dto.getSalary() != null ? dto.getSalary() : employeeConfig.getDefaultSalary();
-
-        if (salary.compareTo(employeeConfig.getMinSalary()) < 0) {
-            throw new BadRequestException("Salary cannot be less than " + employeeConfig.getMinSalary());
-        }
-        if (salary.compareTo(employeeConfig.getMaxSalary()) > 0) {
-            throw new BadRequestException("Salary cannot exceed " + employeeConfig.getMaxSalary());
-        }
-
         employee.setSalary(salary);
         employee.setDepartment(department);
 
         Employee saved = employeeRepository.save(employee);
+        log.info("Employee created successfully with id: {}", saved.getId());
+
         return toResponseDto(saved);
     }
 
     @Override
     public List<EmployeeResponseDto> getAllEmployees(){
-        return employeeRepository.findAll()
-                .stream()
+        log.debug("Getting all employees");
+        List<Employee> employees = employeeRepository.findAll();
+        log.debug("Found {} employees", employees.size());
+
+                return employees.stream()
                 .map(employee -> new EmployeeResponseDto(
                         employee.getId(),
                         employee.getFullName(),
@@ -82,18 +95,32 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponseDto getEmployeeById(Long id) {
+        log.debug("Fetching employee with id: {}", id);
+
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee", "id", id));
+                .orElseThrow(() -> {
+                    log.error("Employee Not found With id: {}", id);
+                    return new ResourceNotFoundException("Employee", "id", id);
+                });
+
         return toResponseDto(employee);
     }
 
     @Override
     public EmployeeResponseDto updateEmployee(Long id, EmployeeRequestDto dto) {
+        log.info("Updating employee with id: {}", id);
+
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+                .orElseThrow(() -> {
+                    log.error("Employee Not found with id: {}", id);
+                    return new ResourceNotFoundException("Employee", "id", id);
+                });
 
         Department department = departmentRepository.findById(dto.getDepartmentId())
-                .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+                .orElseThrow(() -> {
+                    log.error("Department Not found with id: {}", dto.getDepartmentId());
+                    return new ResourceNotFoundException("Department", "id", dto.getDepartmentId());
+                });
 
         employee.setFullName(dto.getFullName());
         employee.setEmail(dto.getEmail());
@@ -101,15 +128,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setDepartment(department);
 
         Employee updated = employeeRepository.save(employee);
+        log.info("Employee updated successfully with id: {}", updated.getId());
+
         return toResponseDto(updated);
     }
 
     @Override
     public void deleteEmployee(Long id) {
+        log.info("Deleting employee with id: {}", id);
+
         if (!employeeRepository.existsById(id)) {
+            log.error("Employee not found with id: {}", id);
             throw new ResourceNotFoundException("Employee", "id", id);
         }
+
         employeeRepository.deleteById(id);
+        log.info("Employee deleted successfully with id: {}", id);
     }
 
 
