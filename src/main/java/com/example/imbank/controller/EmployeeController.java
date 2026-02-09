@@ -1,12 +1,20 @@
 package com.example.imbank.controller;
 
-
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import com.example.imbank.dto.EmployeeRequestDto;
 import com.example.imbank.dto.EmployeeResponseDto;
 import com.example.imbank.dto.PageResponseDto;
 import com.example.imbank.service.EmployeeService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.math.BigDecimal;
@@ -18,7 +26,7 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @PostMapping
-    public EmployeeResponseDto createEmployee(@RequestBody EmployeeRequestDto dto) {
+    public EmployeeResponseDto createEmployee(@Valid @RequestBody EmployeeRequestDto dto) {
         return employeeService.createEmployee(dto);
     }
 
@@ -38,7 +46,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/{id}")
-    public EmployeeResponseDto updateEmployee(@PathVariable Long id, @RequestBody EmployeeRequestDto dto) {
+    public EmployeeResponseDto updateEmployee(@PathVariable Long id, @Valid @RequestBody EmployeeRequestDto dto) {
         return employeeService.updateEmployee(id, dto);
     }
 
