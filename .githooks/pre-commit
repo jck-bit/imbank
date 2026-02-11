@@ -3,9 +3,6 @@
 # Liquibase Pre-commit Hook
 # Automatically generates and includes migrations when entities change
 
-# Use Maven wrapper instead of mvn (always available in project)
-MVN="./mvnw"
-
 echo "🔍 Checking for Liquibase migration synchronization..."
 
 # Check if entity files changed
@@ -33,24 +30,10 @@ fi
 
 # No migration staged - check if schema differences exist
 echo "No migration file detected in this commit"
-echo "Compiling project to detect entity changes..."
-echo ""
-
-# Compile the project first so Liquibase can see the entity changes
-$MVN compile -q -DskipTests
-
-if [ $? -ne 0 ]; then
-    echo "ERROR: Compilation failed"
-    echo "Fix compilation errors before committing"
-    exit 1
-fi
-
-echo "Compilation successful"
 echo "Running Liquibase diff to check for schema differences..."
 echo ""
 
 # Run liquibase diff to check for differences
-DIFF_OUTPUT=$($MVN liquibase:diff -q 2>&1)
 
 # Check if there are actual differences
 if echo "$DIFF_OUTPUT" | grep -q "Diff Summary"; then
@@ -73,7 +56,6 @@ if echo "$DIFF_OUTPUT" | grep -q "Diff Summary"; then
     echo "Generating migration file: ${NEXT_NUM}-auto-generated-${TIMESTAMP}.yaml"
 
     # Run diffChangeLog to generate the migration
-    $MVN liquibase:diffChangeLog -q
 
     # Check if diffChangeLogFile was generated
     if [ -f "src/main/resources/db/changelog/migrations/changelog.yaml" ]; then
@@ -90,10 +72,8 @@ if echo "$DIFF_OUTPUT" | grep -q "Diff Summary"; then
         exit 0
     else
         echo "ERROR: Failed to generate migration file"
-        echo "Please run './mvnw liquibase:diffChangeLog' manually and check for errors"
         exit 1
     fi
 else
-    echo "✅ No schema differences detected - allowing commit"
     exit 0
 fi

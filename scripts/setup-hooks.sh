@@ -8,19 +8,16 @@ set -e
 HOOKS_DIR=".githooks"
 GIT_HOOKS_DIR=".git/hooks"
 
-echo "Setting up Git hooks..."
 echo ""
 
 # Check if .githooks directory exists
 if [ ! -d "$HOOKS_DIR" ]; then
-    echo "ERROR: $HOOKS_DIR directory not found"
     echo "Make sure you're running this from the project root"
     exit 1
 fi
 
 # Check if .git directory exists
 if [ ! -d ".git" ]; then
-    echo "ERROR: Not a git repository"
     echo "Make sure you're in the project root with a .git directory"
     exit 1
 fi
@@ -39,20 +36,15 @@ for hook in "$HOOKS_DIR"/*; do
         ln -sf "../../$HOOKS_DIR/$hook_name" "$target"
         chmod +x "$hook"
 
-        echo "Installed: $hook_name"
         HOOKS_INSTALLED=$((HOOKS_INSTALLED + 1))
     fi
 done
 
 echo ""
 if [ $HOOKS_INSTALLED -eq 0 ]; then
-    echo "No hooks found in $HOOKS_DIR"
 else
-    echo "Successfully installed $HOOKS_INSTALLED hook(s)!"
     echo ""
-    echo "Installed hooks:"
     ls -la "$GIT_HOOKS_DIR" | grep "^l" | awk '{print "   - " $9}'
 fi
 
 echo ""
-echo "Git hooks setup complete!"
