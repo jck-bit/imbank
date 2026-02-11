@@ -42,9 +42,13 @@ done
 
 echo ""
 if [ $HOOKS_INSTALLED -eq 0 ]; then
+    echo "⚠️  No hooks found in $HOOKS_DIR"
 else
+    echo "🎉 Successfully installed $HOOKS_INSTALLED hook(s)!"
     echo ""
+    echo "📋 Installed hooks:"
     ls -la "$GIT_HOOKS_DIR" | grep "^l" | awk '{print "   - " $9}'
 fi
 
 echo ""
+echo "✅ Git hooks setup complete!"

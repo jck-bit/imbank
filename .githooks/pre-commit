@@ -32,68 +32,53 @@ if [ -n "$MIGRATION_CHANGES" ]; then
 fi
 
 # No migration staged - check if schema differences exist
-echo "No migration file detected in this commit"
-echo "Compiling project to detect entity changes..."
+echo "⚠️  No migration file detected in this commit"
+echo "🔨 Compiling project to detect entity changes..."
 echo ""
 
 # Compile the project first so Liquibase can see the entity changes
 $MVN compile -q -DskipTests
 
 if [ $? -ne 0 ]; then
-    echo "ERROR: Compilation failed"
+    echo "❌ ERROR: Compilation failed"
     echo "Fix compilation errors before committing"
     exit 1
 fi
 
-echo "Compilation successful"
-echo "Running Liquibase diff to check for schema differences..."
+echo "✅ Compilation successful"
+echo "🔍 Running Liquibase to generate migration..."
 echo ""
 
-# Run liquibase diff to check for differences
-DIFF_OUTPUT=$($MVN liquibase:diff -q 2>&1)
+# Get next migration number
+LAST_FILE=$(ls -1 src/main/resources/db/changelog/migrations/*.yaml 2>/dev/null | grep -E '[0-9]{3}-.*\.yaml$' | sort -V | tail -1)
+if [ -z "$LAST_FILE" ]; then
+    NEXT_NUM="003"
+else
+    LAST_NUM=$(basename "$LAST_FILE" | grep -oE '^[0-9]{3}')
+    NEXT_NUM=$(printf "%03d" $((10#$LAST_NUM + 1)))
+fi
 
-# Check if there are actual differences
-if echo "$DIFF_OUTPUT" | grep -q "Diff Summary"; then
-    echo "Schema differences detected! Auto-generating migration..."
+# Generate timestamp and filename
+TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+MIGRATION_FILE="src/main/resources/db/changelog/migrations/${NEXT_NUM}-auto-generated-${TIMESTAMP}.yaml"
+
+# Run diffChangeLog to generate the migration (it only creates file if there are differences)
+$MVN liquibase:diffChangeLog -q 2>/dev/null
+
+# Check if diffChangeLogFile was generated (means there ARE differences)
+if [ -f "src/main/resources/db/changelog/migrations/changelog.yaml" ]; then
+    # Rename to proper numbered file
+    mv "src/main/resources/db/changelog/migrations/changelog.yaml" "$MIGRATION_FILE"
+    echo "✅ Migration generated: $MIGRATION_FILE"
     echo ""
 
-    # Get next migration number
-    LAST_FILE=$(ls -1 src/main/resources/db/changelog/migrations/*.yaml 2>/dev/null | grep -E '[0-9]{3}-.*\.yaml$' | sort -V | tail -1)
-    if [ -z "$LAST_FILE" ]; then
-        NEXT_NUM="003"
-    else
-        LAST_NUM=$(basename "$LAST_FILE" | grep -oE '^[0-9]{3}')
-        NEXT_NUM=$(printf "%03d" $((10#$LAST_NUM + 1)))
-    fi
-
-    # Generate timestamp and filename
-    TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-    MIGRATION_FILE="src/main/resources/db/changelog/migrations/${NEXT_NUM}-auto-generated-${TIMESTAMP}.yaml"
-
-    echo "Generating migration file: ${NEXT_NUM}-auto-generated-${TIMESTAMP}.yaml"
-
-    # Run diffChangeLog to generate the migration
-    $MVN liquibase:diffChangeLog -q
-
-    # Check if diffChangeLogFile was generated
-    if [ -f "src/main/resources/db/changelog/migrations/changelog.yaml" ]; then
-        # Rename to proper numbered file
-        mv "src/main/resources/db/changelog/migrations/changelog.yaml" "$MIGRATION_FILE"
-        echo "Migration generated: $MIGRATION_FILE"
-        echo ""
-
-        # Auto-stage the migration file
-        git add "$MIGRATION_FILE"
-        echo "Migration automatically staged for commit"
-        echo ""
-        echo "Entity changes and migrations will be committed together!"
-        exit 0
-    else
-        echo "ERROR: Failed to generate migration file"
-        echo "Please run './mvnw liquibase:diffChangeLog' manually and check for errors"
-        exit 1
-    fi
+    # Auto-stage the migration file
+    git add "$MIGRATION_FILE"
+    echo "✅ Migration automatically staged for commit"
+    echo ""
+    echo "✅ Entity changes and migrations will be committed together!"
+    exit 0
 else
-    echo "No schema differences detected - allowing commit"
+    echo "✅ No schema differences detected - allowing commit"
     exit 0
 fi
