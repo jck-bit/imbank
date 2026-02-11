@@ -88,11 +88,13 @@ public class DepartmentServiceTest {
         // Given
         when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
 
+        // SELECT * FROM department where id = ?
+
         // When
         DepartmentResponseDto result = departmentService.getDepartmentById(1L);
 
         // Then
-        assertThat(result).isNotNull();
+        assertThat(result).isNotNull(); ///false
         assertThat(result.getName()).isEqualTo("IT");
         verify(departmentRepository, times(1)).findById(1L);
     }

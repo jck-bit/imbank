@@ -4,6 +4,7 @@ package com.example.imbank.controller;
 import com.example.imbank.dto.DepartmentRequestDto;
 import com.example.imbank.dto.DepartmentResponseDto;
 import com.example.imbank.service.DepartmentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,7 @@ public class DepartmentController {
     private final DepartmentService departmentService;
 
     @PostMapping
-    public DepartmentResponseDto createDepartment(@RequestBody DepartmentRequestDto dto) {
+    public DepartmentResponseDto createDepartment(@Valid @RequestBody DepartmentRequestDto dto) {
         return departmentService.createDepartment(dto);
     }
 
@@ -40,7 +41,7 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
-    public DepartmentResponseDto updateDepartment(@PathVariable Long id, @RequestBody DepartmentRequestDto dto) {
+    public DepartmentResponseDto updateDepartment(@PathVariable Long id, @Valid @RequestBody DepartmentRequestDto dto) {
         return departmentService.updateDepartment(id, dto);
     }
 

@@ -100,20 +100,19 @@ public class EmployeeServiceTest {
         //when/ Then
         assertThatThrownBy(() -> employeeService.createEmployee(requestDto))
                 .isInstanceOf(ResourceNotFoundException.class)
-                .hasMessage("Department Not Found");
+                .hasMessage("Department not found with id: '1'");
 
         verify(employeeRepository, never()).save(any(Employee.class));
 
     }
 
     @Test
-    @DisplayName("Should thrw exception when salarybelow minimum")
+    @DisplayName("Should throw Exception when salary below minimum")
     void createEmployee_SalaryBelowMinimum() {
         // Given
         requestDto.setSalary(new BigDecimal("20000"));
         when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
         when(employeeConfig.getMinSalary()).thenReturn(new BigDecimal("30000"));
-        when(employeeConfig.getMaxSalary()).thenReturn(new BigDecimal("500000"));
 
         // When/Then
         assertThatThrownBy(() -> employeeService.createEmployee(requestDto))

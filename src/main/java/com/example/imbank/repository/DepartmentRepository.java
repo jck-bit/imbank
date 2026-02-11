@@ -16,7 +16,7 @@ public interface DepartmentRepository extends JpaRepository<Department, Long> {
     Optional<Department>findByName(String name);
 
     // JPQL - Find departments with employees
-    @Query("SELECT DISTINCT d FROM Department d JOIN d.id dep WHERE dep IN (SELECT e.department.id FROM Employee e)")
+    @Query("SELECT DISTINCT d FROM Department d WHERE d.id IN (SELECT e.department.id FROM Employee e)")
     List<Department> findDepartmentsWithEmployees();
 
     // JPQL - Search by name or description

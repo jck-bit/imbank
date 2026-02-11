@@ -130,3 +130,47 @@ databaseChangeLog:
         columnName: updated_at
         tableName: employees
 
+databaseChangeLog:
+- changeSet:
+    id: 1770840825972-1
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropColumn:
+        columnName: created_at
+        tableName: department
+- changeSet:
+    id: 1770840825972-2
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropColumn:
+        columnName: created_at
+        tableName: employees
+- changeSet:
+    id: 1770840825972-3
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropColumn:
+        columnName: full_name
+        tableName: employees
+- changeSet:
+    id: 1770840825972-4
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropColumn:
+        columnName: phone_number
+        tableName: employees
+- changeSet:
+    id: 1770840825972-5
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropColumn:
+        columnName: updated_at
+        tableName: department
+- changeSet:
+    id: 1770840825972-6
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropColumn:
+        columnName: updated_at
+        tableName: employees
+
