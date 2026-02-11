@@ -6,7 +6,7 @@
 # Use Maven wrapper instead of mvn (always available in project)
 MVN="./mvnw"
 
-echo "🔍 Checking for Liquibase migration synchronization..."
+echo "Checking for Liquibase migration synchronization..."
 
 # Check if entity files changed
 ENTITY_CHANGES=$(git diff --cached --name-only | grep "src/main/java/com/example/imbank/entity/" | grep -v "BaseEntity.java")
@@ -27,26 +27,26 @@ if [ -n "$MIGRATION_CHANGES" ]; then
     echo "Migration files already staged:"
     echo "$MIGRATION_CHANGES" | sed 's/^/    /'
     echo ""
-    echo "Pre-commit check passed!"
+    echo "Pre-commit check passed"
     exit 0
 fi
 
 # No migration staged - check if schema differences exist
-echo "⚠️  No migration file detected in this commit"
-echo "🔨 Compiling project to detect entity changes..."
+echo "No migration file detected in this commit"
+echo "Compiling project to detect entity changes..."
 echo ""
 
 # Compile the project first so Liquibase can see the entity changes
 $MVN compile -q -DskipTests
 
 if [ $? -ne 0 ]; then
-    echo "❌ ERROR: Compilation failed"
+    echo "ERROR: Compilation failed"
     echo "Fix compilation errors before committing"
     exit 1
 fi
 
-echo "✅ Compilation successful"
-echo "🔍 Running Liquibase to generate migration..."
+echo "Compilation successful"
+echo "Generating changelog from differences..."
 echo ""
 
 # Get next migration number
@@ -62,23 +62,34 @@ fi
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
 MIGRATION_FILE="src/main/resources/db/changelog/migrations/${NEXT_NUM}-auto-generated-${TIMESTAMP}.yaml"
 
-# Run diffChangeLog to generate the migration (it only creates file if there are differences)
-$MVN liquibase:diffChangeLog -q 2>/dev/null
+# Run diff and capture output to check for differences
+DIFF_OUTPUT=$($MVN liquibase:diff 2>&1)
 
-# Check if diffChangeLogFile was generated (means there ARE differences)
-if [ -f "src/main/resources/db/changelog/migrations/changelog.yaml" ]; then
-    # Rename to proper numbered file
-    mv "src/main/resources/db/changelog/migrations/changelog.yaml" "$MIGRATION_FILE"
-    echo "✅ Migration generated: $MIGRATION_FILE"
-    echo ""
+# Check if there are differences by looking for key indicators
+if echo "$DIFF_OUTPUT" | grep -qi "compared schemas"; then
+    echo "Generating migration file..."
 
-    # Auto-stage the migration file
-    git add "$MIGRATION_FILE"
-    echo "✅ Migration automatically staged for commit"
-    echo ""
-    echo "✅ Entity changes and migrations will be committed together!"
-    exit 0
+    # Generate the changelog
+    $MVN liquibase:generateChangeLog -Dliquibase.outputFile="$MIGRATION_FILE" -q 2>/dev/null
+
+    # Check if file was created
+    if [ -f "$MIGRATION_FILE" ]; then
+        echo "Migration generated: $MIGRATION_FILE"
+        echo ""
+
+        # Auto-stage the migration file
+        git add "$MIGRATION_FILE"
+        echo "Migration automatically staged for commit"
+        echo ""
+        echo "Entity changes and migrations will be committed together"
+        exit 0
+    else
+        echo "WARNING: Could not generate migration file automatically"
+        echo "No schema differences detected or generation failed"
+        echo "Allowing commit to proceed"
+        exit 0
+    fi
 else
-    echo "✅ No schema differences detected - allowing commit"
+    echo "No schema differences detected - allowing commit"
     exit 0
 fi
