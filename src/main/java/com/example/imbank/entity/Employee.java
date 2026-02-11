@@ -32,6 +32,7 @@ import java.math.BigDecimal;
 
         @Column(unique = true, nullable = false)
         private String email;
+        private String address;
 
 
         private BigDecimal salary;
