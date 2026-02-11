@@ -29,8 +29,6 @@ import java.math.BigDecimal;
         private long id;
 
         private String fullName;
-        private String college;
-        private String secondName;
 
         @Column(unique = true, nullable = false)
         private String email;
