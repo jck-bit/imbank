@@ -1,0 +1,44 @@
+databaseChangeLog:
+- changeSet:
+    id: 1770845320929-1
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropColumn:
+        columnName: created_at
+        tableName: department
+- changeSet:
+    id: 1770845320929-2
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropColumn:
+        columnName: created_at
+        tableName: employees
+- changeSet:
+    id: 1770845320929-3
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropColumn:
+        columnName: full_name
+        tableName: employees
+- changeSet:
+    id: 1770845320929-4
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropColumn:
+        columnName: phone_number
+        tableName: employees
+- changeSet:
+    id: 1770845320929-5
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropColumn:
+        columnName: updated_at
+        tableName: department
+- changeSet:
+    id: 1770845320929-6
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropColumn:
+        columnName: updated_at
+        tableName: employees
+
