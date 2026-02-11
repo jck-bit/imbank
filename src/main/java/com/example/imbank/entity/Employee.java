@@ -29,8 +29,6 @@ import java.math.BigDecimal;
         private long id;
 
         private String fullName;
-        private String address;
-        private String phoneNumber;
 
         @Column(unique = true, nullable = false)
         private String email;

@@ -94,6 +94,6 @@ if echo "$DIFF_OUTPUT" | grep -q "Diff Summary"; then
         exit 1
     fi
 else
-    echo "✅ No schema differences detected - allowing commit"
+    echo "No schema differences detected - allowing commit"
     exit 0
 fi
