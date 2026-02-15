@@ -88,8 +88,6 @@ public class DepartmentServiceTest {
         // Given
         when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
 
-        // SELECT * FROM department where id = ?
-
         // When
         DepartmentResponseDto result = departmentService.getDepartmentById(1L);
 
@@ -134,7 +132,6 @@ public class DepartmentServiceTest {
         // Given
         when(departmentRepository.existsById(1L)).thenReturn(true);
         doNothing().when(departmentRepository).deleteById(1L);
-
         // When
         departmentService.deleteDepartment(1L);
 

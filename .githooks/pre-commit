@@ -3,12 +3,12 @@
 # Liquibase Pre-commit Hook
 # Automatically generates and includes migrations when entities change
 
-# Use Maven wrapper instead of mvn (always available in project)
+# Use Maven wrapper instead of =-----> the one for this project's version
 MVN="./mvnw"
 
 echo "Checking for Liquibase migration synchronization..."
 
-# Check if entity files changed
+# Check if entity files changed ---->
 ENTITY_CHANGES=$(git diff --cached --name-only | grep "src/main/java/com/example/imbank/entity/" | grep -v "BaseEntity.java")
 
 if [ -z "$ENTITY_CHANGES" ]; then
@@ -52,7 +52,7 @@ echo ""
 # Remove any existing changelog.yaml before running diff
 rm -f src/main/resources/db/changelog/migrations/changelog.yaml
 
-# Run diff (this will create changelog.yaml if there are differences)
+# QWE thr Run diff (this will create changelog.yaml if there are differences,,....
 $MVN liquibase:diff -q 2>/dev/null
 
 # Check if changelog.yaml was created (means there ARE differences)
@@ -64,7 +64,7 @@ if [ -f "src/main/resources/db/changelog/migrations/changelog.yaml" ]; then
     if [ -z "$LAST_FILE" ]; then
         NEXT_NUM="003"
     else
-        LAST_NUM=$(basename "$LAST_FILE" | grep -oE '^[0-9]{3}')
+        LAST_NUM=$(basename "$LAST_FILE" | grep -oE '^[0-9]{3}') ##
         NEXT_NUM=$(printf "%03d" $((10#$LAST_NUM + 1)))
     fi
 

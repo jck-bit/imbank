@@ -1,12 +1,5 @@
 package com.example.imbank.entity;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 
 import lombok.Getter;
@@ -37,4 +30,11 @@ import java.math.BigDecimal;
         @ManyToOne
         @JoinColumn(name = "department_id", nullable = false)
         private Department department;
+
+        /// /an empl;oyee can be  USER .. or not
+
+        @OneToOne
+        @JoinColumn(name = "user_id", nullable = true)
+        private User user;
+
     }
