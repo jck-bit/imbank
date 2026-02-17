@@ -21,6 +21,7 @@ import java.math.BigDecimal;
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private long id;
 
+        @Column(name = "full_name")
         private String fullName;
 
         @Column(unique = true, nullable = false)
