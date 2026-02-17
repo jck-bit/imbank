@@ -91,6 +91,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Jackson for JSON processing -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
        <!--  JWT DEPENDANCIES -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -110,7 +116,6 @@
             <version>0.13.0</version>
             <scope>runtime</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>

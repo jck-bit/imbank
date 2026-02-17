@@ -73,7 +73,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department updated = departmentRepository.save(department);
         log.info("Department updated successfully with id: {}", updated.getId());
 
-        return toResponseDto(updated);
+     //   return toResponseDto(updated);
+        return null;
     }
 
     @Override

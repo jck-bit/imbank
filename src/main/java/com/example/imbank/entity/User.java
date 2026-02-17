@@ -32,7 +32,7 @@ public class User extends BaseEntity{
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name = "account_non_locked", nullable = false)
     private Boolean accountNonLocked = true;
 
     @Column(nullable = false)

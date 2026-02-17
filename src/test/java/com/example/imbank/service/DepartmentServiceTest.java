@@ -49,7 +49,10 @@ public class DepartmentServiceTest {
         requestDto = new DepartmentRequestDto();
         requestDto.setName("IT");
         requestDto.setDescription("Information Technology");
+
+        departmentService = new DepartmentServiceImpl(departmentRepository);
     }
+
 
     @Test
     @DisplayName("Should create department successfully")
@@ -88,11 +91,12 @@ public class DepartmentServiceTest {
         // Given
         when(departmentRepository.findById(1L)).thenReturn(Optional.of(department));
 
+        // SELECT * FROM   departments WHERE ID
         // When
         DepartmentResponseDto result = departmentService.getDepartmentById(1L);
 
         // Then
-        assertThat(result).isNotNull(); ///false
+        assertThat(result).isNotNull(); // //false
         assertThat(result.getName()).isEqualTo("IT");
         verify(departmentRepository, times(1)).findById(1L);
     }

@@ -6,6 +6,7 @@ import com.example.imbank.dto.DepartmentResponseDto;
 import com.example.imbank.service.DepartmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,16 +26,23 @@ import java.util.List;
 public class DepartmentController {
     private final DepartmentService departmentService;
 
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public DepartmentResponseDto createDepartment(@Valid @RequestBody DepartmentRequestDto dto) {
         return departmentService.createDepartment(dto);
     }
 
+
+    //anyone authenticated can vire the departrments
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'MANAGER')")
     @GetMapping
     public List<DepartmentResponseDto> getAllDepartments() {
         return departmentService.getAllDepartments();
     }
 
+
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'MANAGER')")
     @GetMapping("/{id}")
     public DepartmentResponseDto getDepartmentById(@PathVariable Long id) {
         return departmentService.getDepartmentById(id);

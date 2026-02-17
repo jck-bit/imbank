@@ -27,13 +27,13 @@ public class RefreshToken {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;  // =the  user  who owns this token
 
-    @Column(nullable = false)
+    @Column(name = "expiry_date", nullable = false)
     private LocalDateTime expiryDate;
 
     @Column(nullable = false)
     private Boolean revoked = false;  //n manually revoked (logout)?
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     // Helper method to check if token is expired

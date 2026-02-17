@@ -6,6 +6,7 @@ import com.example.imbank.dto.EmployeeRequestDto;
 import com.example.imbank.dto.EmployeeResponseDto;
 import com.example.imbank.dto.PageResponseDto;
 import com.example.imbank.service.EmployeeService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,11 +26,13 @@ import java.math.BigDecimal;
 public class EmployeeController {
     private final EmployeeService employeeService;
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping
     public EmployeeResponseDto createEmployee(@Valid @RequestBody EmployeeRequestDto dto) {
         return employeeService.createEmployee(dto);
     }
 
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'MANAGER')")
     @GetMapping
     public List<EmployeeResponseDto> getAllEmployees() {
         return employeeService.getAllEmployees();
@@ -50,6 +53,7 @@ public class EmployeeController {
         return employeeService.updateEmployee(id, dto);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
