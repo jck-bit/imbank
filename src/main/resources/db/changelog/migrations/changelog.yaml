@@ -1,0 +1,9 @@
+databaseChangeLog:
+- changeSet:
+    id: 1771330275643-1
+    author: jack.kinyanjui (generated)
+    changes:
+    - dropUniqueConstraint:
+        constraintName: username
+        tableName: users
+

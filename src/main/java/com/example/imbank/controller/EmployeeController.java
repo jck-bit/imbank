@@ -1,5 +1,6 @@
 package com.example.imbank.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import com.example.imbank.dto.EmployeeRequestDto;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 import java.math.BigDecimal;
 
+@Tag(name = "Employee Management", description = "APIs for managing employees")
 @RestController
 @RequestMapping("/api/employees")
 @RequiredArgsConstructor

@@ -24,7 +24,6 @@ import java.math.BigDecimal;
         @Column(name = "full_name")
         private String fullName;
 
-        private String phoneNumber;
 
         @Column(unique = true, nullable = false)
         private String email;

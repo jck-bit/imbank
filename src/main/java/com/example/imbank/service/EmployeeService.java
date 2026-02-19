@@ -22,7 +22,6 @@ public interface EmployeeService {
     List<EmployeeResponseDto> getAboveAverageSalaryEmployees();
     List<EmployeeResponseDto> searchEmployeesByName(String keyword);
 
-
     // Pagination & Sorting
     PageResponseDto<EmployeeResponseDto> getEmployeesPaginated(int page, int size, String sortBy, String sortDir);
 }
