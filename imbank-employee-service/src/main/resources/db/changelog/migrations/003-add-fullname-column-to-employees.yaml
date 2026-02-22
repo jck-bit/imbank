@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-fullname-column-to-employees
+      author: jack
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: employees
+                columnName: full_name
+      changes:
+        - addColumn:
+            tableName: employees
+            columns:
+              - column:
+                  name: full_name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
+      rollback:
+        - dropColumn:
+            tableName: employees
+            columnName: full_name

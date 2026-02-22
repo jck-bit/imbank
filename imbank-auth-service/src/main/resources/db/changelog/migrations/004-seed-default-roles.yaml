@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-seed-default-roles
+      author: jack
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: "0"
+            sql: "SELECT COUNT(*) FROM roles"
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: "ROLE_USER"
+              - column:
+                  name: description
+                  value: "Standard user with read-only access"
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: "ROLE_MANAGER"
+              - column:
+                  name: description
+                  value: "Manager with create and update permissions"
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: name
+                  value: "ROLE_ADMIN"
+              - column:
+                  name: description
+                  value: "Administrator with full system access"

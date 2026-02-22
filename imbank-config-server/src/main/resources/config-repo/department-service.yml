@@ -1,0 +1,19 @@
+server:
+  port: 8083
+
+spring:
+  datasource:
+    url: jdbc:mysql://imbank.cy9wmoq6sdhv.us-east-1.rds.amazonaws.com:3306/imbank
+    username: admin
+    password: '{cipher}70a64dc1d4123750a287d48225a23da38768c5d2d8a4debfa332e2c472cad9c9'
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: validate
+        dialect: org.hibernate.dialect.MySQLDialect
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yml
