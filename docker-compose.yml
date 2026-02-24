@@ -1,0 +1,158 @@
+version: '3.8'
+
+services:
+  config-server:
+    build:
+      context: .
+      dockerfile: ./imbank-config-server/Dockerfile
+    image: imbank-config-server:latest
+    container_name: imbank-config-server
+    ports:
+      - "8888:8888"
+    networks:
+      - imbank-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=native
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8888/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  eureka-server:
+    build:
+      context: .
+      dockerfile: ./imbank-eureka-server/Dockerfile
+    image: imbank-eureka-server:latest
+    container_name: imbank-eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - imbank-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+    depends_on:
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8761/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: ./imbank-auth-service/Dockerfile
+    image: imbank-auth-service:latest
+    container_name: imbank-auth-service
+    ports:
+      - "8081:8081"
+    networks:
+      - imbank-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8081/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 80s
+
+  employee-service:
+    build:
+      context: .
+      dockerfile: ./imbank-employee-service/Dockerfile
+    image: imbank-employee-service:latest
+    container_name: imbank-employee-service
+    ports:
+      - "8082:8082"
+    networks:
+      - imbank-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8082/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 80s
+
+  department-service:
+    build:
+      context: .
+      dockerfile: ./imbank-department-service/Dockerfile
+    image: imbank-department-service:latest
+    container_name: imbank-department-service
+    ports:
+      - "8083:8083"
+    networks:
+      - imbank-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8083/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 80s
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: ./imbank-api-gateway/Dockerfile
+    image: imbank-api-gateway:latest
+    container_name: imbank-api-gateway
+    ports:
+      - "8080:8080"
+    networks:
+      - imbank-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    depends_on:
+      config-server:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+      employee-service:
+        condition: service_healthy
+      department-service:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 80s
+
+networks:
+  imbank-network:
+    driver: bridge

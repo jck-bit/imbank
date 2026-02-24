@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-add-audit-columns-to-employees
+      author: jack
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - columnExists:
+                tableName: employees
+                columnName: created_at
+      changes:
+        - addColumn:
+            tableName: employees
+            columns:
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
