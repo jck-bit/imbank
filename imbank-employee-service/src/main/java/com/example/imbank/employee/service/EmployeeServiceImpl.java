@@ -32,7 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponseDto createEmployee(EmployeeRequestDto dto) {
-        log.info("Creating employee with email: {}", dto.getEmail());
+      //  log.info("Creating employee with email: {}", dto.getEmail());
 
         Department department = departmentRepository.findById(dto.getDepartmentId())
                 .orElseThrow(() -> {

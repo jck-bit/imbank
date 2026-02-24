@@ -27,7 +27,6 @@
     </properties>
 
     <modules>
-        <module>imbank-monolith</module>
         <module>imbank-eureka-server</module>
         <module>imbank-config-server</module>
         <module>imbank-auth-service</module>

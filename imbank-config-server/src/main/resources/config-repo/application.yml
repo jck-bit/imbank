@@ -15,6 +15,13 @@ logging:
     root: INFO
     com.example.imbank: DEBUG
 
+# swagger 
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
 # MySQL common configuration
 spring:
   datasource:

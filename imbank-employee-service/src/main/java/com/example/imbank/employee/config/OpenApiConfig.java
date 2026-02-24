@@ -1,4 +1,4 @@
-package com.example.imbank.auth.config;
+package com.example.imbank.employee.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -13,7 +13,7 @@ import java.util.List;
 public class OpenApiConfig {
 
     @Bean
-    public OpenAPI authServiceOpenAPI() {
+    public OpenAPI employeeServiceOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
                         .title("Employee Service API")
@@ -23,8 +23,8 @@ public class OpenApiConfig {
                                 .url("http://localhost:8080")
                                 .description("API Gateway"),
                         new Server()
-                                .url("http://localhost:8081")
-                                .description("Auth Service Direct (Dev Only)")
+                                .url("http://localhost:8082")
+                                .description("Employee Service Direct (Dev Only)")
                 ))
                 .components(new io.swagger.v3.oas.models.Components()
                         .addSecuritySchemes("Bearer Authentication",

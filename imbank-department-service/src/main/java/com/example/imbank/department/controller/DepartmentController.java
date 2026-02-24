@@ -4,6 +4,7 @@ package com.example.imbank.department.controller;
 import com.example.imbank.department.dto.DepartmentRequestDto;
 import com.example.imbank.department.dto.DepartmentResponseDto;
 import com.example.imbank.department.service.DepartmentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 import java.util.List;
 
-
+@Tag(name = "Department Management", description = "APIs for managing Departments")
 @RestController
 @RequestMapping("/api/departments")
 @RequiredArgsConstructor

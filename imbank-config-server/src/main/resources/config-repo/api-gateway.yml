@@ -8,31 +8,52 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
-      routes:
-        - id: auth-service
-          uri: lb://auth-service
-          predicates:
-            - Path=/api/auth/**
-        - id: employee-service
-          uri: lb://employee-service
-          predicates:
-            - Path=/api/employees/**
-        - id: department-service
-          uri: lb://department-service
-          predicates:
-            - Path=/api/departments/**
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins: "*"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
-              - OPTIONS
-            allowedHeaders: "*"
-            allowCredentials: false
+      server:
+        webflux:
+          routes:
+            - id: auth-service-swagger
+              uri: lb://auth-service
+              predicates:
+                - Path=/auth/**
+              filters:
+                - RewritePath=/auth/(?<segment>.*), /$\{segment}
+            - id: employee-service-swagger
+              uri: lb://employee-service
+              predicates:
+                - Path=/employee/**
+              filters:
+                - RewritePath=/employee/(?<segment>.*), /$\{segment}
+            - id: department-service-swagger
+              uri: lb://department-service
+              predicates:
+                - Path=/department/**
+              filters:
+                - RewritePath=/department/(?<segment>.*), /$\{segment}
+            - id: auth-service
+              uri: lb://auth-service
+              predicates:
+                - Path=/api/auth/**
+            - id: employee-service
+              uri: lb://employee-service
+              predicates:
+                - Path=/api/employees/**
+            - id: department-service
+              uri: lb://department-service
+              predicates:
+                - Path=/api/departments/**
+          globalcors:
+            corsConfigurations:
+              '[/**]':
+                allowedOrigins: "*"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders: "*"
+                allowCredentials: false
+
 
 logging:
   level:
