@@ -1,11 +1,16 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.9-eclipse-temurin-21-alpine'
+            args '-v $HOME/.m2:/root/.m2'
+        }
+    }
 
     stages {
-        stage('📥 Checkout Code') {
+        stage('Checkout Code') {
             steps {
                 echo '=================================='
-                echo '📥 Checking out code from repository...'
+                echo 'Checking out code from repository...'
                 echo '=================================='
                 checkout scm
             }
@@ -21,10 +26,10 @@ pipeline {
                     pwd
 
                     echo "\nJava Version:"
-                    java -version || echo "Java not found"
+                    java -version
 
                     echo "\nMaven Version:"
-                    mvn -version || echo "Maven not found"
+                    mvn -version
 
                     echo "\nProject Directory Contents:"
                     ls -la
@@ -68,13 +73,12 @@ pipeline {
             }
         }
 
-        stage('🐳 Docker Build Trigger') {
+        stage('🐳 Ready for Docker') {
             steps {
                 echo '=================================='
-                echo '🐳 Triggering Docker image builds...'
+                echo '🐳 Build artifacts ready for Docker...'
                 echo '=================================='
-                echo 'Note: Docker builds run on host machine'
-                echo 'Check your terminal for docker-compose build output'
+                echo 'JAR files can now be packaged into Docker images'
                 echo '=================================='
 
                 sh '''
