@@ -103,7 +103,7 @@ pipeline {
                 echo '=================================='
                 sh '''
                     cd imbank-employee-service
-                    mvn clean package -DskipTests
+                    mvn clean install -DskipTests
                     echo "\nBuild artifacts:"
                     ls -lh target/*.jar | grep -v ".original"
                 '''
@@ -114,6 +114,7 @@ pipeline {
             steps {
                 echo '=================================='
                 echo 'Building Department Service (Port 8083)'
+                echo 'Note: Depends on Employee Service'
                 echo '=================================='
                 sh '''
                     cd imbank-department-service
