@@ -40,6 +40,19 @@ pipeline {
             }
         }
 
+        stage('Install Parent POM') {
+            steps {
+                echo '=================================='
+                echo 'Installing Parent POM'
+                echo 'Required for Department Service build'
+                echo '=================================='
+                sh '''
+                    mvn -N install
+                    echo "\nParent POM installed successfully"
+                '''
+            }
+        }
+
         stage('Build Config Server') {
             steps {
                 echo '=================================='
