@@ -5,6 +5,7 @@ spring:
     config:
       uri: http://localhost:8888
       fail-fast: true
+      request-read-timeout: 10000
       retry:
         initial-interval: 1000
         max-attempts: 6

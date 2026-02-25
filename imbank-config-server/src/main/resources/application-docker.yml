@@ -1,0 +1,10 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
+  instance:
+    preferIpAddress: false
+    hostname: config-server
