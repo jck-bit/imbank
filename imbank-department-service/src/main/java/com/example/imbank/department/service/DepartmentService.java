@@ -2,7 +2,6 @@ package com.example.imbank.department.service;
 
 import com.example.imbank.department.dto.DepartmentRequestDto;
 import com.example.imbank.department.dto.DepartmentResponseDto;
-
 import java.util.List;
 
 public interface DepartmentService {
