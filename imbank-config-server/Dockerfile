@@ -14,8 +14,8 @@ RUN mvn -f imbank-config-server/pom.xml dependency:go-offline -B || true
 # Copy source code
 COPY imbank-config-server/src ./imbank-config-server/src
 
-# Build
-RUN mvn -f imbank-config-server/pom.xml clean package -DskipTests
+# Build with increased timeout
+RUN mvn -f imbank-config-server/pom.xml clean package -DskipTests -Dhttp.socket.timeout=300000 -Dhttp.connection.timeout=300000
 
 # Runtime stage
 FROM eclipse-temurin:21-jre-alpine
