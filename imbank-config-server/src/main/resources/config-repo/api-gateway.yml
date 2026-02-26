@@ -41,18 +41,21 @@ spring:
               uri: lb://department-service
               predicates:
                 - Path=/api/departments/**
-          globalcors:
-            corsConfigurations:
-              '[/**]':
-                allowedOrigins: "*"
-                allowedMethods:
-                  - GET
-                  - POST
-                  - PUT
-                  - DELETE
-                  - OPTIONS
-                allowedHeaders: "*"
-                allowCredentials: false
+    globalcors:
+      add-to-simple-url-handler-mapping: true
+      corsConfigurations:
+        '[/**]':
+          allowedOrigins:
+            - "*"
+          allowedMethods:
+            - GET
+            - POST
+            - PUT
+            - DELETE
+            - OPTIONS
+          allowedHeaders:
+            - "*"
+          allowCredentials: false
 
 
 logging:

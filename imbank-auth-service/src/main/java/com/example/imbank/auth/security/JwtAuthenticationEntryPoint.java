@@ -25,8 +25,8 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             AuthenticationException authException
     ) throws IOException, ServletException {
 
-        log.error("Unauthorized access attempt: {} - Path: {}",
-                authException.getMessage(), request.getRequestURI());
+        log.error("JwtAuthenticationEntryPoint triggered - Path: {}, Exception: {}, Type: {}",
+                request.getRequestURI(), authException.getMessage(), authException.getClass().getSimpleName());
 
         // Set response status to 401
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
