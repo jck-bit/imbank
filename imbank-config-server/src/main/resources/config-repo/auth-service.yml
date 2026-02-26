@@ -1,5 +1,6 @@
 server:
   port: 8081
+  forward-headers-strategy: framework
 
 spring:
   datasource:
@@ -18,19 +19,13 @@ spring:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yml
 
+
 springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
-    path: /swagger-ui.html
-    enabled: true
-    config-url: /v3/api-docs/swagger-config
-    url: /v3/api-docs
-  servers:
-    - url: http://localhost:8080/api/auth
-      description: API Gateway
-    - url: http://localhost:8081
-      description: Direct Access
+    enabled: false
+
 
 info:
   title: "Authentication Service API"

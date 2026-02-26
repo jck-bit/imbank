@@ -1,5 +1,6 @@
 package com.example.imbank.auth.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityScheme;
@@ -16,17 +17,9 @@ public class OpenApiConfig {
     public OpenAPI authServiceOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Employee Service API")
+                        .title("Auth Service API")
                         .version("1.0.0"))
-                .servers(List.of(
-                        new Server()
-                                .url("http://localhost:8080")
-                                .description("API Gateway"),
-                        new Server()
-                                .url("http://localhost:8081")
-                                .description("Auth Service Direct (Dev Only)")
-                ))
-                .components(new io.swagger.v3.oas.models.Components()
+                .components(new Components()
                         .addSecuritySchemes("Bearer Authentication",
                                 new SecurityScheme()
                                         .type(SecurityScheme.Type.HTTP)

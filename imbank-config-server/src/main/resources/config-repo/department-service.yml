@@ -1,5 +1,6 @@
 server:
   port: 8083
+  forward-headers-strategy: framework
 
 spring:
   datasource:
@@ -22,15 +23,9 @@ springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
-    path: /swagger-ui.html
-    enabled: true
-    config-url: /v3/api-docs/swagger-config
-    url: /v3/api-docs
-  servers:
-    - url: http://localhost:8080/api/departments
-      description: API Gateway
-    - url: http://localhost:8083
-      description: Direct Access
+    enabled: false
+
+
 
 jwt:
   secret: '{cipher}240c207930d6a771410c62d2b94c7c168e038ef0ed1aba378b6ed88a15bccebf0c6ca197be375c2ff23a003af56fad4267d1acc7739e9cb191fc6bb264c7e752739131753b53e760c8060768c506f6fc'

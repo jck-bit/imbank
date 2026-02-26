@@ -15,13 +15,19 @@ logging:
   level:
     root: INFO
     com.example.imbank: DEBUG
-
 # swagger
 springdoc:
   api-docs:
-    path: /v3/api-docs
+    enabled: true
   swagger-ui:
     path: /swagger-ui.html
+    urls:
+      - name: Auth Service
+        url: /auth/v3/api-docs
+      - name: Employee Service
+        url: /employee/v3/api-docs
+      - name: Department Service
+        url: /department/v3/api-docs
 
 # Actuator configuration - allow unauthenticated access for healthchecks
 management:
